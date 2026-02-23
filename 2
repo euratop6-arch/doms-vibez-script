@@ -1,0 +1,360 @@
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local Lighting = game:GetService("Lighting")
+
+-- GUI
+local gui = Instance.new("ScreenGui")
+gui.Name = "RetroWindow"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+-- MAIN WINDOW
+local window = Instance.new("Frame")
+window.Size = UDim2.new(0, 650, 0, 420)
+window.Position = UDim2.new(0.2, 0, 0.15, 0)
+window.BackgroundColor3 = Color3.fromRGB(212,208,200)
+window.BorderSizePixel = 0
+window.Active = true
+window.Draggable = true
+window.Parent = gui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 12)
+corner.Parent = window
+
+-- TOP BAR
+local topBar = Instance.new("Frame")
+topBar.Size = UDim2.new(1, 0, 0, 35)
+topBar.BackgroundColor3 = Color3.fromRGB(15,45,150)
+topBar.BorderSizePixel = 0
+topBar.Parent = window
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, -120, 1, 0)
+title.Position = UDim2.new(0, 12, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "doms atmosphere hub"
+title.Font = Enum.Font.Arcade
+title.TextSize = 18
+title.TextColor3 = Color3.new(1,1,1)
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.Parent = topBar
+
+-- BUTTON HOLDER
+local buttonHolder = Instance.new("Frame")
+buttonHolder.Size = UDim2.new(0, 90, 1, 0)
+buttonHolder.Position = UDim2.new(1, -95, 0, 0)
+buttonHolder.BackgroundTransparency = 1
+buttonHolder.Parent = topBar
+
+local function makeButton(text, color)
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(0, 28, 0, 24)
+	btn.BackgroundColor3 = color
+	btn.Text = text
+	btn.Font = Enum.Font.Arcade
+	btn.TextSize = 16
+	btn.TextColor3 = Color3.new(1,1,1)
+	btn.Parent = buttonHolder
+	
+	local c = Instance.new("UICorner")
+	c.CornerRadius = UDim.new(0,6)
+	c.Parent = btn
+	
+	return btn
+end
+
+local minimize = makeButton("-", Color3.fromRGB(0,120,255))
+minimize.Position = UDim2.new(0,0,0,5)
+
+local close = makeButton("X", Color3.fromRGB(200,0,0))
+close.Position = UDim2.new(0,60,0,5)
+
+-- CONTENT AREA
+local content = Instance.new("Frame")
+content.Size = UDim2.new(1, -20, 1, -55)
+content.Position = UDim2.new(0,10,0,45)
+content.BackgroundColor3 = Color3.fromRGB(235,235,235)
+content.BorderSizePixel = 0
+content.Parent = window
+
+local contentCorner = Instance.new("UICorner")
+contentCorner.CornerRadius = UDim.new(0,10)
+contentCorner.Parent = content
+
+-- CATEGORY PANEL (LEFT)
+local categories = Instance.new("Frame")
+categories.Size = UDim2.new(0, 160, 1, -20)
+categories.Position = UDim2.new(0,10,0,10)
+categories.BackgroundColor3 = Color3.fromRGB(200,200,200)
+categories.Parent = content
+
+local catCorner = Instance.new("UICorner")
+catCorner.CornerRadius = UDim.new(0,8)
+catCorner.Parent = categories
+
+-- RIGHT PANEL FOR CATEGORY CONTENT
+local rightPanel = Instance.new("Frame")
+rightPanel.Size = UDim2.new(1, -180, 1, -20)
+rightPanel.Position = UDim2.new(0,170,0,10)
+rightPanel.BackgroundColor3 = Color3.fromRGB(245,245,245)
+rightPanel.Parent = content
+
+local rightCorner = Instance.new("UICorner")
+rightCorner.CornerRadius = UDim.new(0,8)
+rightCorner.Parent = rightPanel
+
+-- CATEGORY BUTTON MAKER
+local function createCategory(name, y)
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(1, -10, 0, 35)
+	btn.Position = UDim2.new(0,5,0,y)
+	btn.Text = name
+	btn.Font = Enum.Font.Arcade
+	btn.TextSize = 16
+	btn.BackgroundColor3 = Color3.fromRGB(220,220,220)
+	btn.TextColor3 = Color3.new(0,0,0)
+	btn.Parent = categories
+	
+	local c = Instance.new("UICorner")
+	c.CornerRadius = UDim.new(0,6)
+	c.Parent = btn
+	
+	return btn
+end
+
+-- RIGHT PANEL CONTENTS
+local categoryContents = {}
+
+-- ====================
+-- Atmosphere
+-- ====================
+local atmFrame = Instance.new("Frame")
+atmFrame.Size = UDim2.new(1,0,1,0)
+atmFrame.BackgroundTransparency = 1
+atmFrame.Parent = rightPanel
+categoryContents["Atmosphere"] = atmFrame
+
+local yPos = 10
+local spacing = 35
+
+local function makeLabel(text, posY)
+	local lbl = Instance.new("TextLabel")
+	lbl.Text = text
+	lbl.Size = UDim2.new(0,150,0,25)
+	lbl.Position = UDim2.new(0,10,0,posY)
+	lbl.BackgroundTransparency = 1
+	lbl.TextXAlignment = Enum.TextXAlignment.Left
+	lbl.Parent = atmFrame
+	return lbl
+end
+
+local function makeBox(posY, placeholder)
+	local box = Instance.new("TextBox")
+	box.Size = UDim2.new(0,80,0,25)
+	box.Position = UDim2.new(0,160,0,posY)
+	box.PlaceholderText = placeholder
+	box.BackgroundColor3 = Color3.fromRGB(255,255,255)
+	box.Parent = atmFrame
+	return box
+end
+
+-- Brightness
+makeLabel("Brightness", yPos)
+local brightnessBox = makeBox(yPos,"0-10")
+yPos = yPos + spacing
+
+-- Time of Day
+makeLabel("Time of Day", yPos)
+local timeBox = makeBox(yPos,"0-24")
+yPos = yPos + spacing
+
+-- Fog Density
+makeLabel("Fog Density", yPos)
+local fogBox = makeBox(yPos,"0-1")
+yPos = yPos + spacing
+
+-- Ambient Color
+makeLabel("Ambient Color (R,G,B)", yPos)
+local colorBox = makeBox(yPos,"255,255,255")
+yPos = yPos + spacing
+
+-- Bloom Toggle
+local bloomToggle = Instance.new("TextButton")
+bloomToggle.Text = "Toggle Bloom"
+bloomToggle.Size = UDim2.new(0,150,0,25)
+bloomToggle.Position = UDim2.new(0,10,0,yPos)
+bloomToggle.BackgroundColor3 = Color3.fromRGB(0,150,255)
+bloomToggle.TextColor3 = Color3.new(1,1,1)
+bloomToggle.Parent = atmFrame
+local bloomOn = false
+bloomToggle.MouseButton1Click:Connect(function()
+	bloomOn = not bloomOn
+	if bloomOn then
+		if not Lighting:FindFirstChild("Bloom") then
+			local b = Instance.new("BloomEffect")
+			b.Parent = Lighting
+		end
+	else
+		local b = Lighting:FindFirstChild("Bloom")
+		if b then b:Destroy() end
+	end
+end)
+yPos = yPos + spacing
+
+-- Apply Button
+local applyBtn = Instance.new("TextButton")
+applyBtn.Text = "Apply Atmosphere"
+applyBtn.Size = UDim2.new(0,150,0,30)
+applyBtn.Position = UDim2.new(0,10,0,yPos)
+applyBtn.BackgroundColor3 = Color3.fromRGB(0,150,255)
+applyBtn.TextColor3 = Color3.new(1,1,1)
+applyBtn.Parent = atmFrame
+
+applyBtn.MouseButton1Click:Connect(function()
+	local brightness = tonumber(brightnessBox.Text)
+	if brightness then
+		Lighting.Brightness = math.clamp(brightness,0,10)
+	end
+
+	local timeOfDay = tonumber(timeBox.Text)
+	if timeOfDay then
+		Lighting.TimeOfDay = tostring(math.clamp(timeOfDay,0,24))..":00:00"
+	end
+
+	local fogDensity = tonumber(fogBox.Text)
+	if fogDensity then
+		Lighting.FogStart = 0
+		Lighting.FogEnd = 1000
+		Lighting.FogColor = Lighting.OutdoorAmbient
+	end
+
+	local colors = {}
+	for num in string.gmatch(colorBox.Text,"%d+") do
+		table.insert(colors, tonumber(num))
+	end
+	if #colors == 3 then
+		Lighting.Ambient = Color3.fromRGB(colors[1],colors[2],colors[3])
+	end
+end)
+
+-- ====================
+-- Lighting Tab
+-- ====================
+local lightFrame = Instance.new("Frame")
+lightFrame.Size = UDim2.new(1,0,1,0)
+lightFrame.BackgroundTransparency = 1
+lightFrame.Parent = rightPanel
+lightFrame.Visible = false
+categoryContents["Lighting"] = lightFrame
+
+-- Add similar sliders/boxes for Lighting: Brightness, Exposure, Shadows, ColorShift etc.
+-- For brevity you can copy the Atmosphere style and just replace the properties
+
+-- ====================
+-- Fog Tab
+-- ====================
+local fogFrame = Instance.new("Frame")
+fogFrame.Size = UDim2.new(1,0,1,0)
+fogFrame.BackgroundTransparency = 1
+fogFrame.Parent = rightPanel
+fogFrame.Visible = false
+categoryContents["Fog"] = fogFrame
+
+-- You can add sliders: FogStart, FogEnd, FogColor, FogDensity
+
+-- ====================
+-- Skybox Tab
+-- ====================
+local skyFrame = Instance.new("Frame")
+skyFrame.Size = UDim2.new(1,0,1,0)
+skyFrame.BackgroundTransparency = 1
+skyFrame.Parent = rightPanel
+skyFrame.Visible = false
+categoryContents["Skybox"] = skyFrame
+
+local skyInputs = {}
+local sides = {"Up","Down","Left","Right","Front","Back"}
+for i, side in ipairs(sides) do
+	makeLabel(side.." ID:",10+(i-1)*40).Parent = skyFrame
+	local box = makeBox(10+(i-1)*40,"rbxassetid://")
+	box.Parent = skyFrame
+	skyInputs[side] = box
+end
+
+local applySkyBtn = Instance.new("TextButton")
+applySkyBtn.Text = "Apply Skybox"
+applySkyBtn.Size = UDim2.new(0,150,0,30)
+applySkyBtn.Position = UDim2.new(0,10,0,10 + 6*40)
+applySkyBtn.BackgroundColor3 = Color3.fromRGB(0,150,255)
+applySkyBtn.TextColor3 = Color3.new(1,1,1)
+applySkyBtn.Parent = skyFrame
+
+applySkyBtn.MouseButton1Click:Connect(function()
+	local sky = Instance.new("Sky")
+	sky.Parent = Lighting
+	for _, side in ipairs(sides) do
+		local id = skyInputs[side].Text:gsub("rbxassetid://","")
+		sky["Skybox"..side] = "rbxassetid://"..id
+	end
+end)
+
+-- ====================
+-- Extras Tab
+-- ====================
+local extrasFrame = Instance.new("Frame")
+extrasFrame.Size = UDim2.new(1,0,1,0)
+extrasFrame.BackgroundTransparency = 1
+extrasFrame.Parent = rightPanel
+extrasFrame.Visible = false
+categoryContents["Extras"] = extrasFrame
+
+-- Example: WalkSpeed Slider
+makeLabel("WalkSpeed",10).Parent = extrasFrame
+local wsBox = makeBox(10,"16")
+wsBox.Parent = extrasFrame
+local applyExtras = Instance.new("TextButton")
+applyExtras.Text = "Apply Extras"
+applyExtras.Size = UDim2.new(0,150,0,30)
+applyExtras.Position = UDim2.new(0,10,0,50)
+applyExtras.BackgroundColor3 = Color3.fromRGB(0,150,255)
+applyExtras.TextColor3 = Color3.new(1,1,1)
+applyExtras.Parent = extrasFrame
+
+applyExtras.MouseButton1Click:Connect(function()
+	local ws = tonumber(wsBox.Text)
+	if ws then
+		player.Character.Humanoid.WalkSpeed = ws
+	end
+end)
+
+-- ====================
+-- CATEGORY BUTTONS
+-- ====================
+local catNames = {"Atmosphere","Lighting","Fog","Skybox","Extras"}
+for i, name in ipairs(catNames) do
+	local btn = createCategory(name, 10 + (i-1)*45)
+	btn.MouseButton1Click:Connect(function()
+		for k,v in pairs(categoryContents) do
+			v.Visible = (k == name)
+		end
+	end)
+end
+
+-- MINIMIZE LOGIC
+local minimized = false
+local originalSize = window.Size
+minimize.MouseButton1Click:Connect(function()
+	if not minimized then
+		window.Size = UDim2.new(0,650,0,35)
+		minimized = true
+	else
+		window.Size = originalSize
+		minimized = false
+	end
+end)
+
+-- CLOSE LOGIC
+close.MouseButton1Click:Connect(function()
+	gui:Destroy()
+end)
